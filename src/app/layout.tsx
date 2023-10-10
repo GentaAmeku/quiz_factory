@@ -1,8 +1,7 @@
-import { Providers } from './provider';
-
 import './globals.css';
 import { notojp } from '@/styles/fonts';
 import Page from '@/components/Page';
+import { Providers } from '@/provider';
 
 export const metadata = {
   title: 'Quiz Factory',

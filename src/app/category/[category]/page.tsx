@@ -1,26 +1,40 @@
 'use client';
-
-import { useRouter } from 'next/navigation';
 import { kfhimaji } from '@/styles/fonts';
-import { Button } from '@nextui-org/react';
+import { Card, CardBody, Spacer } from '@nextui-org/react';
+import { useInitializeQuiz, useStep } from './hooks';
 
-export default function Home() {
-  const router = useRouter();
-  const handleClickStart = () => router.replace('/category');
+export default function QuizStep() {
+  const { current, next, getStepValue } = useStep();
+  const { step } = useInitializeQuiz();
+  const data = getStepValue();
+  console.log(data);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="flex flex-col items-center">
-        <h1 className={`text-9xl ${kfhimaji.className}`}>Quiz Factory</h1>
-        <div className="w-6/12">
-          <Button
-            color="default"
-            variant="light"
-            className={`w-full mt-24 p-8`}
-            onClick={handleClickStart}
+    <main className="flex flex-col items-center justify-center p-24">
+      <h2 className={`${kfhimaji.className} text-5xl`}>
+        {current + 1}/{step}
+      </h2>
+      <Spacer y={6} />
+      <Card className="p-6">
+        <CardBody>
+          <p className="text-xl">{data?.title}</p>
+        </CardBody>
+      </Card>
+      <Spacer y={6} />
+      <div className="grid gap-8 grid-cols-1 mt-12 sm:grid-cols-2">
+        {data?.options?.map((v, i) => (
+          <Card
+            isPressable
+            key={i}
+            onPress={() => null}
+            isHoverable
+            className="p-1"
           >
-            <span className={`text-3xl`}>GAME START</span>
-          </Button>
-        </div>
+            <CardBody>
+              <p>{v}</p>
+            </CardBody>
+          </Card>
+        ))}
       </div>
     </main>
   );

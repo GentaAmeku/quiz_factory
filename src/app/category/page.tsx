@@ -2,11 +2,10 @@
 
 import { categories } from '@/data';
 import { kfhimaji } from '@/styles/fonts';
-import { Card, Image } from '@nextui-org/react';
-import NextImage from 'next/image';
+import { Card, CardBody, Image } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 
-export default function Category() {
+export default function SelectCategory() {
   const router = useRouter();
   const handleClickCategory = (id: string) => () => {
     router.replace(`/category/${id}`);
@@ -14,21 +13,22 @@ export default function Category() {
   return (
     <main className="flex flex-col items-center justify-between p-24">
       <h1 className={`text-5xl ${kfhimaji.className}`}>Category</h1>
-      <div className="grid gap-8 grid-cols-1 mt-12">
+      <div className="grid gap-8 grid-cols-1 mt-12 sm:grid-cols-2">
         {categories.map((item, i) => (
           <Card
+            key={item.id || i}
             isPressable
             onPress={handleClickCategory(item.id)}
-            key={i}
             shadow="md"
+            className="w-72"
+            isDisabled={!item.id}
+            disableRipple={!item.id}
           >
-            <Image
-              as={NextImage}
-              alt={item.title}
-              src={item.img.src}
-              width={450}
-              height={300}
-            />
+            <CardBody>
+              <p className={`text-lg text-center ${kfhimaji.className}`}>
+                {item.title || '???'}
+              </p>
+            </CardBody>
           </Card>
         ))}
       </div>
