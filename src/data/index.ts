@@ -12,10 +12,17 @@ export const categories: Category[] = [
   { id: '', title: '' },
 ];
 
+interface Options {
+  label: string;
+  value: number;
+}
+
 export interface Quiz {
-  correct: boolean;
   title: string;
-  options: string[];
+  options: Options[];
+  correct: number;
+  answer?: number;
+  incorrect?: boolean;
 }
 
 interface CategoryQuestion {
@@ -28,43 +35,23 @@ export const data: CategoryQuestion[] = [
     category: 'ro',
     quiz: [
       {
-        correct: false,
-        title: 'オークスケルトンカードの効果で正しいのは次の内どれ1？',
+        title: 'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWM1',
+        correct: 1,
         options: [
-          '聖属性モンスターに与える物理ダメージ + 20%',
-          '闇属性モンスターに与える物理ダメージ + 20%',
-          '地属性モンスターに与える物理ダメージ + 20%',
-          'オーク系に対するダメージ + 30%',
+          { label: 'WM', value: 1 },
+          { label: 'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWM', value: 2 },
+          { label: 'WWWWWWWWWWWWWWWWM', value: 3 },
+          { label: 'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWM', value: 4 },
         ],
       },
       {
-        correct: false,
-        title: 'オークスケルトンカードの効果で正しいのは次の内どれ2？',
+        title: 'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWM2',
+        correct: 2,
         options: [
-          '聖属性モンスターに与える物理ダメージ + 20%',
-          '闇属性モンスターに与える物理ダメージ + 20%',
-          '地属性モンスターに与える物理ダメージ + 20%',
-          'オーク系に対するダメージ + 30%',
-        ],
-      },
-      {
-        correct: false,
-        title: 'オークスケルトンカードの効果で正しいのは次の内どれ3？',
-        options: [
-          '聖属性モンスターに与える物理ダメージ + 20%',
-          '闇属性モンスターに与える物理ダメージ + 20%',
-          '地属性モンスターに与える物理ダメージ + 20%',
-          'オーク系に対するダメージ + 30%',
-        ],
-      },
-      {
-        correct: false,
-        title: 'オークスケルトンカードの効果で正しいのは次の内どれ4？',
-        options: [
-          '聖属性モンスターに与える物理ダメージ + 20%',
-          '闇属性モンスターに与える物理ダメージ + 20%',
-          '地属性モンスターに与える物理ダメージ + 20%',
-          'オーク系に対するダメージ + 30%',
+          { label: 'WM', value: 1 },
+          { label: 'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWM', value: 2 },
+          { label: 'WWWWWWWWWWWWWWWWM', value: 3 },
+          { label: 'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWM', value: 4 },
         ],
       },
     ],
