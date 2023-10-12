@@ -1,7 +1,13 @@
 'use client';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { kfhimaji } from '@/styles/fonts';
 import { Button, Card, CardBody, Spacer } from '@nextui-org/react';
 import { useQuiz, useStep } from './_hooks';
+
+const XmarkIcon = () => (
+  <FontAwesomeIcon icon={faXmark} size="lg" color="#ff0000" className="mr-4" />
+);
 
 export default function QuizStep() {
   const { current, next, getStepValue } = useStep();
@@ -34,7 +40,10 @@ export default function QuizStep() {
             className="p-1 max-w-lg"
           >
             <CardBody>
-              <p>{v.label}</p>
+              <div className="flex flex-row break-all items-center">
+                <XmarkIcon />
+                <p>{v.label}</p>
+              </div>
             </CardBody>
           </Card>
         ))}
