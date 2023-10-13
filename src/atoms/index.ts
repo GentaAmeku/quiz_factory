@@ -22,19 +22,28 @@ export const quizInitializeSelector = selector<Quiz[]>({
     ),
 });
 
+const setAnswer = (quiz: Quiz[], [answer, current]: number[]) =>
+  quiz.map((d, i) => {
+    return i === current ? { ...d, answer } : d;
+  });
+
+const setJudge = (quiz: Quiz[]) =>
+  quiz.map((d, i) => {
+    return {
+      ...d,
+      options: d.options.map((o) => ({
+        ...o,
+        isCorrect: d.correct === o.value,
+        isIncorrect: d.answer !== d.correct && o.value === d.answer,
+      })),
+    };
+  });
+
 export const quizAnswerSelector = selector({
   key: 'quizAnswerSelector',
   get: ({ get }) => get(quizAnswerAtom),
   set: ({ get, set }, data): void => {
     const quiz = get(quizAtom);
-    const [answer, current] = data as number[];
-    set(
-      quizAtom,
-      quiz.map((d, i) => {
-        return i === current
-          ? { ...d, answer, incorrect: answer !== d.correct }
-          : d;
-      })
-    );
+    set(quizAtom, setJudge(setAnswer(quiz, data as number[])));
   },
 });

@@ -1,5 +1,5 @@
 import './globals.css';
-import { notojp } from '@/styles/fonts';
+import { kiwi, notojp } from '@/styles/fonts';
 import Page from '@/components/Page';
 import { Providers } from '@/provider';
 
@@ -14,8 +14,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja" className="light">
-      <body className={`${notojp.className}`}>
+    <html lang="ja" className={`${notojp.variable} ${kiwi.variable} light`}>
+      <body>
         <Providers>
           <Page>{children}</Page>
         </Providers>

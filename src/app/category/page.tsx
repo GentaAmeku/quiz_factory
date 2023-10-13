@@ -1,33 +1,42 @@
 'use client';
 
 import { categories } from '@/data';
-import { kfhimaji } from '@/styles/fonts';
-import { Card, CardBody, Image } from '@nextui-org/react';
+import { Card, CardBody, CardHeader, Image } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
+import NextImage from 'next/image';
 
 export default function SelectCategory() {
   const router = useRouter();
-  const handleClickCategory = (id: string) => () => {
-    router.replace(`/category/${id}`);
+  const handlePressCategory = (id: string) => {
+    router.push(`/category/${id}`);
   };
   return (
-    <main className="flex flex-col items-center justify-between p-24">
-      <h1 className={`text-5xl ${kfhimaji.className}`}>Category</h1>
-      <div className="grid gap-8 grid-cols-1 mt-12 sm:grid-cols-2">
-        {categories.map((item, i) => (
+    <main className="flex flex-col items-center justify-between p-16">
+      <h1 className="text-5xl font-kiwi">Categories</h1>
+      <div className="grid gap-8 mt-12 grid-cols-[minmax(320px,1fr)] ">
+        {categories.map((item) => (
           <Card
-            key={item.id || i}
+            key={item.id}
+            shadow="lg"
             isPressable
-            onPress={handleClickCategory(item.id)}
-            shadow="md"
-            className="w-72"
-            isDisabled={!item.id}
-            disableRipple={!item.id}
+            onPress={() => handlePressCategory(item.id)}
           >
-            <CardBody>
-              <p className={`text-lg text-center ${kfhimaji.className}`}>
-                {item.title || '???'}
-              </p>
+            <CardHeader className="pb-0 pt-4 px-6 flex-col items-start">
+              <p className="text-xl">{item.title || '???'}</p>
+            </CardHeader>
+            <CardBody className="overflow-visible max-w-md">
+              <div className="rounded-xl">
+                <Image
+                  as={NextImage}
+                  alt="Category Card"
+                  src={item.img?.src}
+                  width="320"
+                  height="320"
+                  sizes="100vw"
+                  className="w-full h-auto"
+                  priority
+                />
+              </div>
             </CardBody>
           </Card>
         ))}

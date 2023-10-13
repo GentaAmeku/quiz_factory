@@ -13,4 +13,5 @@
 body {
   background: #ffffff;
   color: rgb(var(--foreground-rgb));
+  font-family: 'Noto Sans JP', sans-serif;
 }
