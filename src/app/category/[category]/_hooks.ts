@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import useSound from 'use-sound';
 import { useParams } from 'next/navigation';
 
 import { random } from '@/utils';
 import { CategoryId, Quiz, data } from '@/data';
-import { quizAtom, quizInitializeSelector, quizAnswerSelector } from '@/atoms';
+import { quizAtom, quizInitializeSelector } from '@/atoms';
 
 import correctSfx from '@/sounds/correct.mp3';
 import incorrectSfx from '@/sounds/incorrect.mp3';
@@ -21,24 +21,48 @@ const createQuiz = (quiz: Quiz[], range: number): Quiz[] => {
   return random(quiz, range);
 };
 
+const setAnswer = (quiz: Quiz[], answer: number, current: number) =>
+  quiz.map((d, i) => {
+    return i === current ? { ...d, answer } : d;
+  });
+
+const setJudge = (quiz: Quiz[]) =>
+  quiz.map((d) => {
+    if (!d.answer || 'isCorrect' in d) return d;
+    return {
+      ...d,
+      options: d.options.map((o) => ({
+        ...o,
+        isCorrect: d.correct === o.value,
+        isIncorrect: d.answer !== d.correct && o.value === d.answer,
+      })),
+    };
+  });
+
 export const useQuiz = () => {
   const { category } = useParams();
   const [playCorrectSfx] = useSound(correctSfx, { volume: 0.5 });
   const [playIncorrectSfx] = useSound(incorrectSfx, { volume: 0.5 });
   const quizOrig = getQuiz(category as CategoryId);
   const length = getStepLength(quizOrig);
-  const quiz = createQuiz(quizOrig, length);
-  const setQuiz = useSetRecoilState(quizInitializeSelector);
-  const setQuizAnswer = useSetRecoilState(quizAnswerSelector);
-  const setAnswer = (answer: number, current: number) =>
-    setQuizAnswer([answer, current]);
+  const initializeQuiz = useSetRecoilState(quizInitializeSelector);
+  const [quiz, setQuiz] = useRecoilState(quizAtom);
+  const reply = (answer: number, current: number) => {
+    const quizWithAnser = setAnswer(quiz, answer, current);
+    setQuiz(setJudge(quizWithAnser));
+
+    const currentQuiz = quizWithAnser[current];
+    currentQuiz.answer === currentQuiz.correct
+      ? playCorrectSfx()
+      : playIncorrectSfx();
+  };
 
   useEffect(() => {
-    setQuiz(quiz);
+    initializeQuiz(createQuiz(quizOrig, length));
     console.info('initialized', quiz);
   }, []);
 
-  return { length, setAnswer };
+  return { length, setAnswer: reply };
 };
 
 export const useStep = () => {

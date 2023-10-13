@@ -7,11 +7,6 @@ export const quizAtom = atom<Quiz[]>({
   default: [],
 });
 
-export const quizAnswerAtom = atom<number[]>({
-  key: 'quizAnswerAtom',
-  default: [],
-});
-
 export const quizInitializeSelector = selector<Quiz[]>({
   key: 'quizSelector',
   get: ({ get }) => get(quizAtom),
@@ -20,31 +15,4 @@ export const quizInitializeSelector = selector<Quiz[]>({
       quizAtom,
       (data as Quiz[]).map((d) => ({ ...d, options: shuffle(d.options) }))
     ),
-});
-
-const setAnswer = (quiz: Quiz[], [answer, current]: number[]) =>
-  quiz.map((d, i) => {
-    return i === current ? { ...d, answer } : d;
-  });
-
-const setJudge = (quiz: Quiz[]) =>
-  quiz.map((d) => {
-    if (!d.answer || 'isCorrect' in d) return d;
-    return {
-      ...d,
-      options: d.options.map((o) => ({
-        ...o,
-        isCorrect: d.correct === o.value,
-        isIncorrect: d.answer !== d.correct && o.value === d.answer,
-      })),
-    };
-  });
-
-export const quizAnswerSelector = selector({
-  key: 'quizAnswerSelector',
-  get: ({ get }) => get(quizAnswerAtom),
-  set: ({ get, set }, data): void => {
-    const quiz = get(quizAtom);
-    set(quizAtom, setJudge(setAnswer(quiz, data as number[])));
-  },
 });
