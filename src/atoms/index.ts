@@ -28,7 +28,8 @@ const setAnswer = (quiz: Quiz[], [answer, current]: number[]) =>
   });
 
 const setJudge = (quiz: Quiz[]) =>
-  quiz.map((d, i) => {
+  quiz.map((d) => {
+    if (!d.answer || 'isCorrect' in d) return d;
     return {
       ...d,
       options: d.options.map((o) => ({

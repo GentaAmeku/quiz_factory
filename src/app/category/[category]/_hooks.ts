@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import useSound from 'use-sound';
+import { useParams } from 'next/navigation';
 
-import { random, shuffle } from '@/utils';
+import { random } from '@/utils';
 import { CategoryId, Quiz, data } from '@/data';
 import { quizAtom, quizInitializeSelector, quizAnswerSelector } from '@/atoms';
-import { useParams } from 'next/navigation';
+
+import correctSfx from '@/sounds/correct.mp3';
+import incorrectSfx from '@/sounds/incorrect.mp3';
 
 const getQuiz = (c: CategoryId): Quiz[] | [] => {
   const target = data.find(({ category }) => category === c);
@@ -19,6 +23,8 @@ const createQuiz = (quiz: Quiz[], range: number): Quiz[] => {
 
 export const useQuiz = () => {
   const { category } = useParams();
+  const [playCorrectSfx] = useSound(correctSfx, { volume: 0.5 });
+  const [playIncorrectSfx] = useSound(incorrectSfx, { volume: 0.5 });
   const quizOrig = getQuiz(category as CategoryId);
   const length = getStepLength(quizOrig);
   const quiz = createQuiz(quizOrig, length);
@@ -36,10 +42,11 @@ export const useQuiz = () => {
 };
 
 export const useStep = () => {
-  const quiz = useRecoilValue(quizAtom);
   const [current, setCurrent] = useState(0);
-  const next = () => setCurrent((c) => c + 1);
+  const quiz = useRecoilValue(quizAtom);
+  const isLastStep = current === quiz.length - 1;
+  const next = () => !isLastStep && setCurrent((c) => c + 1);
   const getStepValue = (step: number = current): Quiz => quiz[step] || {};
 
-  return { current, next, getStepValue };
+  return { current, next, getStepValue, isLastStep };
 };

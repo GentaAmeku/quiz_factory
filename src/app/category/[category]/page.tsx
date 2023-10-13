@@ -1,17 +1,21 @@
 'use client';
 import { Card, CardBody, Spacer, Image, Button } from '@nextui-org/react';
 import NextImage from 'next/image';
-import { useQuiz, useStep } from './_hooks';
 import { Options } from '@/data';
+import { useParams, useRouter } from 'next/navigation';
+import { useQuiz, useStep } from './_hooks';
 
 export default function QuizStep() {
-  const { current, next, getStepValue } = useStep();
+  const { category } = useParams();
+  const { current, next, getStepValue, isLastStep } = useStep();
   const { length, setAnswer } = useQuiz();
+  const router = useRouter();
   const data = getStepValue();
   const handleOnPressCard = (v: number) => {
     if (!data.answer) setAnswer(v, current);
   };
   const handleClickContinue = () => {
+    if (isLastStep) router.push(`/category/${category}/result`);
     next();
   };
   const getStyles = (o: Options): string => {
@@ -73,6 +77,7 @@ export default function QuizStep() {
             shadow="sm"
             className={`p-1 ${getStyles(o)}`}
             fullWidth
+            disableRipple
           >
             <CardBody>
               <p className="break-all text-center">{o.label}</p>
@@ -80,20 +85,24 @@ export default function QuizStep() {
           </Card>
         ))}
       </div>
-      <Spacer y={12} />
-      <div className="flex justify-end w-full">
-        <div className="w-1/6">
-          <Button
-            color="primary"
-            size="lg"
-            variant="shadow"
-            className="w-full p-6"
-            onClick={handleClickContinue}
-          >
-            <span>Continue</span>
-          </Button>
-        </div>
-      </div>
+      {data.answer && (
+        <>
+          <Spacer y={12} />
+          <div className="flex justify-end w-full">
+            <div className="w-1/6">
+              <Button
+                color="primary"
+                size="lg"
+                variant="shadow"
+                className="w-full p-6 text-lg"
+                onClick={handleClickContinue}
+              >
+                <span>{isLastStep ? 'Result' : 'Continue'}</span>
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
     </main>
   );
 }
