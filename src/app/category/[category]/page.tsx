@@ -1,5 +1,5 @@
 'use client';
-import { Card, CardBody, Spacer, Image, Button } from '@nextui-org/react';
+import { Card, CardBody, Spacer, Button } from '@nextui-org/react';
 import NextImage from 'next/image';
 import { Options } from '@/data';
 import { useParams, useRouter } from 'next/navigation';
@@ -45,25 +45,24 @@ export default function QuizStep() {
         {current + 1}/{length}
       </h2>
       <Spacer y={8} />
-      <div className="flex flex-col items-center sm:flex-row sm:flex-row-reverse sm:items-start">
-        <div className="flex flex-col font-kiwi text-xl leading-loose tracking-[.3em] grow">
+      <div className="flex flex-col items-center sm:flex-row sm:flex-row-reverse sm:items-start sm:w-full">
+        <div className="flex flex-col font-kiwi text-xl leading-loose tracking-[.3em] grow sm: flex-1">
           <p>
             <span>問題:{current + 1}</span>
             <span className="ml-4">{data?.title}</span>
           </p>
           <p className="mt-5">{data?.description}</p>
         </div>
-        <div className="mt-6 w-3/4 sm:w-3/12 sm:mr-6 sm:-mt-0">
-          <Image
-            as={NextImage}
-            alt="Description Image"
-            src={data.img?.src}
-            width="320"
-            height="320"
-            sizes="100vw"
-            className="w-full h-auto"
-            priority
-          />
+        <div className="mt-6 relative w-[240px] h-[320px] sm:mr-6 sm:-mt-0">
+          {data.img && (
+            <NextImage
+              alt="Description Image"
+              src={data.img?.src || ''}
+              style={{ objectFit: 'cover' }}
+              priority
+              fill
+            />
+          )}
         </div>
       </div>
       <Spacer y={8} />

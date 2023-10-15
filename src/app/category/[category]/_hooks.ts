@@ -41,8 +41,8 @@ const setJudge = (quiz: Quiz[]) =>
 
 export const useQuiz = () => {
   const { category } = useParams();
-  const [playCorrectSfx] = useSound(correctSfx, { volume: 0.5 });
-  const [playIncorrectSfx] = useSound(incorrectSfx, { volume: 0.5 });
+  const [playCorrectSfx] = useSound(correctSfx, { volume: 1 });
+  const [playIncorrectSfx] = useSound(incorrectSfx, { volume: 1 });
   const quizOrig = getQuiz(category as CategoryId);
   const length = getStepLength(quizOrig);
   const initializeQuiz = useSetRecoilState(quizInitializeSelector);
@@ -52,9 +52,8 @@ export const useQuiz = () => {
     setQuiz(setJudge(quizWithAnser));
 
     const currentQuiz = quizWithAnser[current];
-    currentQuiz.answer === currentQuiz.correct
-      ? playCorrectSfx()
-      : playIncorrectSfx();
+    if (currentQuiz.answer === currentQuiz.correct) playCorrectSfx();
+    if (currentQuiz.answer !== currentQuiz.correct) playIncorrectSfx();
   };
 
   useEffect(() => {
